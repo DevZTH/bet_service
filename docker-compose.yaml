@@ -1,0 +1,33 @@
+version: '3.0'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=user
+      - POSTGRES_DB=bets
+    networks:
+      - test_pg
+
+  adminer:
+    image: adminer:4.8.0-standalone
+    restart: always
+    ports:
+      - 8082:8080
+    networks:
+      - test_pg
+
+  app:
+    build: .
+    ports:
+      - 8000:8000
+    networks:
+      - test_pg
+
+networks:
+  test_pg:
